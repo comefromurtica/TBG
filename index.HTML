@@ -52,8 +52,8 @@
             getFirestore, collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp, doc, deleteDoc, updateDoc, getDoc, setDoc
         };
 // -------------------- 🔹 트윗 렌더링 함수 --------------------
-function displayTweets(docs, append = false) {
-  const container = document.getElementById("tweet-container");
+function displayposts(docs, append = false) {
+  const container = document.getElementById("post-container");
   if (!append) container.innerHTML = "";
   docs.forEach(doc => {
     const data = doc.data();
@@ -76,32 +76,32 @@ let lastVisible = null;
 let loading = false;
 
 
-async function loadInitialTweets() {
+async function loadInitialposts() {
   const q = query(
-    collection(db, "tweets"),
+    collection(db, "posts"),
     orderBy("createdAt", "desc"),
     limit(100)
   );
   const snapshot = await getDocs(q);
-  displayTweets(snapshot.docs);
+  displayposts(snapshot.docs);
   lastVisible = snapshot.docs[snapshot.docs.length - 1];
 }
 
 
-async function loadMoreTweets() {
+async function loadMoreposts() {
   if (loading || !lastVisible) return;
   loading = true;
 
 
   const next = query(
-    collection(db, "tweets"),
+    collection(db, "posts"),
     orderBy("createdAt", "desc"),
     startAfter(lastVisible),
     limit(100)
   );
   const snapshot = await getDocs(next);
   if (!snapshot.empty) {
-    displayTweets(snapshot.docs, true);
+    displayposts(snapshot.docs, true);
     lastVisible = snapshot.docs[snapshot.docs.length - 1];
   }
   loading = false;
@@ -112,7 +112,7 @@ async function loadMoreTweets() {
 window.addEventListener("scroll", () => {
   const nearBottom =
     window.innerHeight + window.scrollY >= document.body.offsetHeight - 300;
-  if (nearBottom) loadMoreTweets();
+  if (nearBottom) loadMorePosts();
 });
 
 
@@ -2885,11 +2885,7 @@ const App = () => {
 </script>
 
 
-// -------------------- 🔹 초기 실행 --------------------
-loadInitialTweets();
-</script>
-
-
 </body>
 
 </html>
+
